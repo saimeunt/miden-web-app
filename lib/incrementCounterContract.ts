@@ -7,12 +7,13 @@ export async function incrementCounterContract(): Promise<void> {
 
   // dynamic import → only in the browser, so WASM is loaded client‑side
   const {
-    Address,
+    AccountId,
     AssemblerUtils,
     TransactionKernel,
     TransactionRequestBuilder,
     TransactionScript,
     WebClient,
+    Address
   } = await import("@demox-labs/miden-sdk");
 
   const nodeEndpoint = "https://rpc.testnet.miden.io";
@@ -67,7 +68,7 @@ export async function incrementCounterContract(): Promise<void> {
 
   // Counter contract account id on testnet
   const counterContractId = Address.fromBech32(
-    "mtst1qrhk9zc2au2vxqzaynaz5ddhs4cqqghmajy"
+    "mtst1qrhk9zc2au2vxqzaynaz5ddhs4cqqghmajy",
   ).accountId();
 
   // Reading the public state of the counter contract from testnet,
@@ -94,13 +95,13 @@ export async function incrementCounterContract(): Promise<void> {
   let counterComponentLib = AssemblerUtils.createAccountComponentLibrary(
     assembler, // assembler
     "external_contract::counter_contract", // library path to call the contract
-    counterContractCode // account code of the contract
+    counterContractCode, // account code of the contract
   );
 
   // Creating the transaction script
   let txScript = TransactionScript.compile(
     txScriptCode,
-    assembler.withLibrary(counterComponentLib)
+    assembler.withLibrary(counterComponentLib),
   );
 
   // Creating a transaction request with the transaction script
@@ -111,7 +112,7 @@ export async function incrementCounterContract(): Promise<void> {
   // Executing the transaction script against the counter contract
   let txResult = await client.newTransaction(
     counterContractAccount.id(),
-    txIncrementRequest
+    txIncrementRequest,
   );
 
   // Submitting the transaction result to the node
@@ -129,7 +130,7 @@ export async function incrementCounterContract(): Promise<void> {
 
   // Converting the Word represented as a hex to a single integer value
   const counterValue = Number(
-    BigInt("0x" + count!.toHex().slice(-16).match(/../g)!.reverse().join(""))
+    BigInt("0x" + count!.toHex().slice(-16).match(/../g)!.reverse().join("")),
   );
 
   console.log("Count: ", counterValue);

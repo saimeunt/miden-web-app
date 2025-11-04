@@ -4,12 +4,16 @@ import { createMintConsume } from "@/lib/createMintConsume";
 import { incrementCounterContract } from "@/lib/incrementCounterContract";
 import { deployCounterContract } from "@/lib/deployCounterContract";
 import { deployCounterContractRust } from "@/lib/deployCounterContractRust";
+import { foreignProcedureInvocation } from "@/lib/foreignProcedureInvocation";
+import { syncState } from "@/lib/syncState";
 
 export default function Home() {
   const [isCreatingNotes, setIsCreatingNotes] = useState(false);
   const [isIncrementCounter, setIsIncrementCounter] = useState(false);
   const [isDeployingCounter, setIsDeployingCounter] = useState(false);
   const [isDeployingCounterRust, setIsDeployingCounterRust] = useState(false);
+  const [isFPIRunning, setIsFPIRunning] = useState(false);
+  const [isSyncStateRunning, setIsSyncStateRunning] = useState(false);
 
   const handleCreateMintConsume = async () => {
     setIsCreatingNotes(true);
@@ -35,6 +39,18 @@ export default function Home() {
     setIsDeployingCounterRust(false);
   };
 
+  const handleForeignProcedureInvocation = async () => {
+    setIsFPIRunning(true);
+    await foreignProcedureInvocation();
+    setIsFPIRunning(false);
+  };
+
+  const handleSyncState = async () => {
+    setIsSyncStateRunning(true);
+    await syncState();
+    setIsSyncStateRunning(false);
+  };
+
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black text-slate-800 dark:text-slate-100">
       <div className="text-center">
@@ -42,29 +58,27 @@ export default function Home() {
         <p className="mb-6">Open your browser console to see WebClient logs.</p>
 
         <div className="max-w-sm w-full bg-gray-800/20 border border-gray-600 rounded-2xl p-6 mx-auto flex flex-col gap-4">
-          {/* <button
+          <button
             onClick={handleCreateMintConsume}
             className="w-full px-6 py-3 text-lg cursor-pointer bg-transparent border-2 border-orange-600 text-white rounded-lg transition-all hover:bg-orange-600 hover:text-white"
           >
             {isCreatingNotes
               ? "Working..."
               : "Tutorial #1: Create, Mint, Consume Notes"}
-          </button> */}
-          {/* <button
+          </button>
+          <button
             onClick={handleIncrementCounterContract}
             className="w-full px-6 py-3 text-lg cursor-pointer bg-transparent border-2 border-orange-600 text-white rounded-lg transition-all hover:bg-orange-600 hover:text-white"
           >
             {isIncrementCounter
               ? "Working..."
               : "Tutorial #3: Increment Counter Contract"}
-          </button> */}
+          </button>
           <button
             onClick={handleDeployCounterContract}
             className="w-full px-6 py-3 text-lg cursor-pointer bg-transparent border-2 border-orange-600 text-white rounded-lg transition-all hover:bg-orange-600 hover:text-white"
           >
-            {isDeployingCounter
-              ? "Working..."
-              : "Deploy Counter Contract"}
+            {isDeployingCounter ? "Working..." : "Deploy Counter Contract"}
           </button>
           <button
             onClick={handleDeployCounterContractRust}
@@ -73,6 +87,20 @@ export default function Home() {
             {isDeployingCounterRust
               ? "Working..."
               : "Deploy Counter Contract Rust"}
+          </button>
+          <button
+            onClick={handleForeignProcedureInvocation}
+            className="w-full px-6 py-3 text-lg cursor-pointer bg-transparent border-2 border-orange-600 text-white rounded-lg transition-all hover:bg-orange-600 hover:text-white"
+          >
+            {isFPIRunning
+              ? "Working..."
+              : "Foreign Procedure Invocation Tutorial"}
+          </button>
+          <button
+            onClick={handleSyncState}
+            className="w-full px-6 py-3 text-lg cursor-pointer bg-transparent border-2 border-orange-600 text-white rounded-lg transition-all hover:bg-orange-600 hover:text-white"
+          >
+            {isSyncStateRunning ? "Working..." : "Sync State Bug Reproduction"}
           </button>
         </div>
       </div>
